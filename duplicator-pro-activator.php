@@ -4,7 +4,7 @@
  * Plugin Name:       Duplicator Pro Activator
  * Plugin URI:        https://github.com/wp-activators/duplicator-pro-activator
  * Description:       Duplicator Pro Plugin Activator
- * Version:           1.1.0
+ * Version:           1.2.0
  * Requires at least: 3.1.0
  * Requires PHP:      7.2
  * Author:            mohamedhk2
@@ -23,7 +23,12 @@ if (
 	return;
 }
 
+if ( ! defined( 'DUPLICATOR_USTATS_DISALLOW' ) ) {
+	define( 'DUPLICATOR_USTATS_DISALLOW', true );
+}
+
 use Duplicator\Addons\ProBase\License\License;
+use \Duplicator\Utils\UsageStatistics\CommStats;
 
 add_filter( 'pre_http_request', function ( $pre, $parsed_args, $url ) {
 	$STORE_URL = 'https://duplicator.com';
@@ -42,7 +47,10 @@ add_filter( 'pre_http_request', function ( $pre, $parsed_args, $url ) {
 
 			return activator_json_response( $data );
 		}
+	} elseif ( str_starts_with( $url, CommStats::getRemoteHost() . CommStats::END_POINT_PLUGIN_STATS ) !== false ) {
+		return activator_json_response( [] );
 	}
+
 
 	return $pre;
 }, 99, 3 );
