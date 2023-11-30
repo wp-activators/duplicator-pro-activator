@@ -1,25 +1,24 @@
 <?php
 /**
  * @wordpress-plugin
- * Plugin Name:       Duplicator Pro Activator
- * Plugin URI:        https://github.com/wp-activators/duplicator-pro-activator
- * Description:       Duplicator Pro Plugin Activator
- * Version:           1.3.0
+ * Plugin Name:       Duplicator Pro Activ@tor
+ * Plugin URI:        https://bit.ly/dup-act
+ * Description:       Duplicator Pro Plugin Activ@tor
+ * Version:           1.4.0
  * Requires at least: 5.9.0
  * Requires PHP:      7.2
- * Author:            mohamedhk2
- * Author URI:        https://github.com/mohamedhk2
+ * Author:            moh@medhk2
+ * Author URI:        https://bit.ly/medhk2
  **/
 
 defined( 'ABSPATH' ) || exit;
-$DUPLICATOR_PRO_ACTIVATOR_NAME   = 'Duplicator Pro Activator';
-$DUPLICATOR_PRO_ACTIVATOR_DOMAIN = 'duplicator-pro-activator';
-$functions                       = require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php';
-extract( $functions );
+$PLUGIN_NAME   = 'Duplicator Pro Activ@tor';
+$PLUGIN_DOMAIN = 'duplicator-pro-activ@tor';
+extract( require_once __DIR__ . DIRECTORY_SEPARATOR . 'functions.php' );
 if (
-	$activator_admin_notice_ignored()
-	|| $activator_admin_notice_plugin_install( 'duplicator-pro/duplicator-pro.php', null, 'Duplicator Pro', $DUPLICATOR_PRO_ACTIVATOR_NAME, $DUPLICATOR_PRO_ACTIVATOR_DOMAIN )
-	|| $activator_admin_notice_plugin_activate( 'duplicator-pro/duplicator-pro.php', $DUPLICATOR_PRO_ACTIVATOR_NAME, $DUPLICATOR_PRO_ACTIVATOR_DOMAIN )
+	$admin_notice_ignored()
+	|| $admin_notice_plugin_install( 'duplicator-pro/duplicator-pro.php', null, 'Duplicator Pro', $PLUGIN_NAME, $PLUGIN_DOMAIN )
+	|| $admin_notice_plugin_activate( 'duplicator-pro/duplicator-pro.php', $PLUGIN_NAME, $PLUGIN_DOMAIN )
 ) {
 	return;
 }
@@ -31,7 +30,7 @@ if ( ! defined( 'DUPLICATOR_USTATS_DISALLOW' ) ) {
 use Duplicator\Addons\ProBase\License\License;
 use \Duplicator\Utils\UsageStatistics\CommStats;
 
-add_filter( 'pre_http_request', function ( $pre, $parsed_args, $url ) use ( $activator_json_response ) {
+add_filter( 'pre_http_request', function ( $pre, $parsed_args, $url ) use ( $json_response ) {
 	$STORE_URL = 'https://duplicator.com';
 	if ( class_exists( License::class ) ) {
 		$STORE_URL = License::EDD_DUPPRO_STORE_URL;
@@ -46,10 +45,10 @@ add_filter( 'pre_http_request', function ( $pre, $parsed_args, $url ) use ( $act
 			$data->license_limit  = $data->activations_left = 500;
 			$data->license_status = License::STATUS_VALID;
 
-			return $activator_json_response( $data );
+			return $json_response( $data );
 		}
 	} elseif ( str_starts_with( $url, CommStats::getRemoteHost() . CommStats::END_POINT_PLUGIN_STATS ) !== false ) {
-		return $activator_json_response( [] );
+		return $json_response( [] );
 	}
 
 
